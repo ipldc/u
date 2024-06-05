@@ -1,0 +1,88 @@
+clc;
+clear all;
+close all;
+suptitle('Spectral analysis of sampled signal - 22BEC109')
+t=(-1:0.001:1)*10^(-3);
+fm=1000;
+a=sin(2*pi*fm*t)
+subplot(4,2,1)
+plot(t,a)
+xlabel('time')
+ylabel('amplitude')
+title('given ct sinusoidal')
+fs1=1.1*fm
+fs2=2*fm
+fs3=10*fm
+T=1/fm;
+%under sampling
+t1=-10:10;
+x1=sin(2*pi*(fm/fs1)*t1);
+subplot(4,2,2)
+stem(t1,x1)
+hold on;
+subplot(4,2,2)
+plot(t1,x1,'g')
+xlabel('time')
+ylabel('amplitude')
+title('under sampling')
+%critally sampled
+t2=-10:10;
+x2=sin(2*pi*(fm/fs2)*t2);
+subplot(4,2,3)
+stem(t2,x2)
+hold on;
+subplot(4,2,3)
+plot(t2,x2,'r')
+xlabel('time')
+ylabel('amplitude')
+title('critically sampled')
+%oversampled
+t3=-5:5;
+x3=sin(2*pi*(fm/fs3)*t3);
+subplot(4,2,4)
+stem(t3,x3)
+hold on;
+subplot(4,2,4)
+plot(t3,x3,'b')
+xlabel('time')
+ylabel('amplitude')
+title('over sampled')
+
+%given fft
+y=fftshift(fft(a))
+nd=1000*10^3/(length(y))
+ns=[-(length(y)-1)/2:(length(y)-1)/2]*nd;
+subplot(4,2,5)
+stem(ns,abs(y))
+xlabel('time')
+ylabel('amplitude')
+title('given sampled')
+
+%fft(x1)
+y1=fftshift(fft(x1))
+nd1=fs1/length(y1)
+ns1=[-(length(y1)-1)/2:(length(y1)-1)/2]*nd1;
+subplot(4,2,6)
+stem(ns1,abs(y1))
+xlabel('time')
+ylabel('amplitude')
+title('under sampled')
+
+%fft(x2)
+y2=fftshift(fft(x2))
+nd2=fs2/length(y2)
+ns2=[-(length(y2)-1)/2:(length(y2)-1)/2]*nd2;
+subplot(4,2,7)
+stem(ns2,abs(y2),'g')
+xlabel('time')
+ylabel('amplitude')
+title('critically sampled')
+%fft (x3)
+y3=fftshift(fft(x3))
+nd3=fs3/length(y3)
+ns3=[-(length(y3)-1)/2:(length(y3)-1)/2]*nd3;
+subplot(4,2,8)
+stem(ns3,abs(y3),'p')
+xlabel('time')
+ylabel('amplitude')
+title('over sampled')

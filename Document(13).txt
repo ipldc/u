@@ -1,0 +1,57 @@
+close all;
+clear all;
+suptitle('IIR FILTER -22BEC109’)
+T=1;
+Ap=input('enter the value of passband ripple:');
+As=input('enter the value of passband ripple:');
+wp=input('enter the value of passband freq:');
+ws=input('enter the value of passband freq:');
+
+%prewarpped analog freq
+
+op=(2/T)*tan((wp/2));
+os=(2/T)*tan((ws/2));
+
+%order of filter
+[N,wc]=cheb1ord(op,os,Ap,As);
+
+%bilinear transformation
+[b,a]=cheby1(N,Ap,op);
+Hs=tf(b,a);
+filt(b,a)
+[b1,a1]=bilinear(b,a,T);
+Hz=tf(b1,a1);
+filt(b1,a1)
+om=0:0.01:pi;
+[H,ph]=freqz(b1,a1,om);
+subplot(2,2,1)
+plot((ph/pi),20*log(abs(H)))
+title('magnitude spect using bilinear transformation')
+ylabel('|H(e^jw)|')
+xlabel('angular freq')
+subplot(2,2,2)
+plot((ph/pi),angle(H))
+title('phase spect using bilinear transformation')
+ylabel('<(H(e^jw))')
+xlabel('angular freq')
+
+%impulse invariance
+
+[b3,a3]=cheby1(N,Ap,op,'stop','s');
+Hs=tf(b3,a3);
+filt(b3,a3)
+[b4,a4]=impinvar(b3,a3,T);
+Hz=tf(b4,a4);
+filt(b4,a4)
+om=0:0.01:pi;
+[H,ph]=freqz(b4,a4,om);
+subplot(2,2,3)
+plot((ph/pi),20*log(abs(H)))
+title('magnitude spect using impulse invariance')
+ylabel('|H(e^jw)|')
+xlabel('angular freq')
+subplot(2,2,4)
+plot((ph/pi),angle(H))
+title('phase spect using impulse invariance')
+ylabel('<(H(e^jw))')
+xlabel('angular freq')

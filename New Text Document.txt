@@ -1,0 +1,49 @@
+POLE ZERO PLOT
+suptitle('POLE ZERO PLOT')
+b=input('Enter the coeff neumarator')
+a=input('Enter the coeff denominator')
+t=input('Enter the order of the polynomial')
+HZ=filt(b,a,t)
+disp(HZ)
+%impusle response
+[h,n]=impz(b,a)
+disp([h,n])
+subplot(3,2,1)
+stem(n,h)
+title('Impusle Response')
+xlabel('Time')
+ylabel('Amplitidue')
+%frequency response
+[H,W]=freqz(b,a);
+subplot(3,2,2)
+plot(W/pi,20*log10(abs(H)))
+title('Magnitude Plot')
+xlabel('Time')
+ylabel('magnitude')
+subplot(3,2,3)
+plot(W/pi,angle(H))
+title('Angle Plot')
+xlabel('Time')
+ylabel('Angle')
+%polezeroplot
+subplot(3,2,4)
+zplane(b,a)
+title('Pole Zero Plot')
+%stability
+[Z,P,K]=tf2zp(b,a)
+if all(abs(P)<1)
+    disp('Stable')
+else
+    disp('Unstable')
+end
+%Response of the LTI System
+T=1:14;
+X=[ones(1,14)];
+subplot(3,2,5)
+title('UNIT STEP')
+stem(T,X)
+Y=filter(b,a,X)
+subplot(3,2,6)
+stem(Y)
+
+

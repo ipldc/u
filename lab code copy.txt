@@ -1,0 +1,271 @@
+#convolution
+close all;
+clear all;
+%convolution
+sgtitle(' convolution -22BEC109’)
+x=input('enter the values of x=')
+h=input('enter the value of h=')
+nx1=input('enter the x start value=')
+nx2=input('enter the x end value=')
+nh1=input('enter the h start value=')
+nh2=input('enter the h stop value=')
+nx=nx1:nx2
+nh=nh1:nh2
+subplot(2,2,1)
+stem(nx,x)
+xlabel('time')
+ylabel('amplitude')
+title('x[n]')
+subplot(2,2,2)
+stem(nh,h)
+xlabel('time')
+ylabel('amplitude')
+title('h[n]')
+ 
+ 
+n=max(length(x),length(h));
+x1=[x,zeros(1,n-length(x))]
+h1=[h,zeros(1,n-length(h))]
+ 
+%convolution inbuilt function
+ 
+ny1=nx1+(-(nh2+n-length(h)))
+ny2=(nx2+(n-length(x)))+(-nh1)
+ny=ny1:ny2;
+y1=xcorr(x1,h1)
+subplot(2,2,3)
+stem(ny,y1)
+xlabel('time')
+ylabel('amplitude')
+title('y[n] builtin')
+N=length(x1)+length(h1)-1
+h2=fliplr(h1);
+x2=[x1,zeros(1,N-length(x1))]
+h3=[h2,zeros(1,N-length(h1))]
+ 
+%using formula method
+ 
+for i=1:N
+    y(i)=0;
+    for j=1:N
+        if(i-j+1)>=1
+           y(i)=(x2(j)*h3(i-j+1))+y(i);
+        end
+    end
+end
+ 
+subplot(2,2,4)
+stem(ny,y)
+xlabel('time')
+ylabel('amplitude')
+title('y[n]formula method')
+ 
+disp('OUTPUT')
+disp('Given input sequence x{n}')
+nx
+x
+disp('Given impulse sequence h{n}')
+nh
+h
+disp('convoluted output sequence using for loop')
+ny
+y
+disp('using inbuilt function')
+y1
+
+
+
+#circularconvolution
+clc;
+close all;
+clear all;
+%circular convolution
+sgtitle('Circular convolution-22BEC109’)
+x=input('enter the values of x=')
+h=input('enter the value of h=')
+nx1=input('enter the x start value=')
+nx2=input('enter the x end value=')
+nh1=input('enter the h start value=')
+nh2=input('enter the h start value=')
+nx=nx1:nx2
+nh=nh1:nh2
+subplot(2,2,1)
+stem(nx,x)
+xlabel('time')
+ylabel('amplitude')
+title('x[n]')
+subplot(2,2,2)
+stem(nh,h)
+xlabel('time')
+ylabel('amplitude')
+title('h[n]')
+M=max(length(x),length(h));
+
+%circular convolution inbuilt function
+ny1=nx1+nh1
+ny2=nx2+nh2
+y1=cconv(x,h,M)
+disp(y1)
+subplot(2,2,3)
+stem(y1)
+xlabel('time')
+ylabel('amplitude')
+title('y[n] builtin')
+
+x1=[x,zeros(1,M-length(x))]
+h1=[h,zeros(1,M-length(h))]
+
+%using formula method
+ny=ny1:ny2;
+for i=1:M
+    y(i)=0;
+    for j=1:M
+        k=i-j+1
+        if(k<=0)
+            k=k+M
+        end
+           y(i)=(x1(k)*h1(j))+y(i);
+    end
+end
+y
+subplot(2,2,4)
+stem(y)
+xlabel('time')
+ylabel('amplitude')
+title('y[n]formula method')
+
+disp('OUTPUT')
+disp('Given input sequence x{n}')
+nx
+x
+disp('Given impulse sequence h{n}')
+nh
+h
+disp('convoluted output sequence using for loop')
+ny
+y
+disp('using inbuilt function')
+y1
+
+
+#correlation
+clc;
+close all;
+clear all;
+%correlation
+sgtitle('correlation-22BEC109’
+)
+x=input('enter the i/p sequence')
+h=input('enter the impules response')
+N=max(length(x),length(h))
+ 
+%enter the range of index n for x(n) and h(n)
+nx1=input('enter the lower range of x:nx1')%lower time index of x(n)
+nx2=input('enter the upper range of x:nx2')%upper time index of x(n)
+nh1=input('enter the lower range of h:nh1')%lower time index of h(n)
+nh2=input('enter the upper range of h:nh2')%upper time index of h(n)
+nx=nx1:(nx2+(N-length(x)))%values of n for x(n)
+nhi=nh1:(nh2+(N-length(x)))%values of n for h(n)
+nh=-(nh2+(N-length(h))):-nh1
+ 
+%plot the input and impulse sequence
+subplot(3,2,1)
+stem((nx1:nx2),x)%plot the i/p seq
+grid on
+xlabel('n')
+ylabel('x[n]')
+title('Given i/p seq x[n]')
+ 
+subplot(3,2,2)
+grid on
+stem((nh1:nh2),h)
+xlabel('n')
+ylabel('h[n]')
+title('impules response h[n]')
+ 
+% to compute corr the two seq should be of same length
+x1=[x,zeros(1,N-length(x))]
+h1=[h,zeros(1,N-length(h))]
+ 
+%calculate the length of the output seq
+n1=length(x1)%length of the input seq
+n2=length(h1)%length of the impulse seq
+n=n1+n2-1% length of the output seq
+ny=(nx(1)+nh(1)):(nx(end)+nh(end))%values of n for y(n)
+ 
+%find the crosscorr using inbuilt fnc
+ 
+y=xcorr(x1,h1)
+subplot(3,2,3)
+stem(ny,y)
+grid on
+xlabel('n')
+ylabel('y[n]')
+title('output seq for cross corr y[n] builtin fnc')
+ 
+%program for auto corr
+ 
+r=xcorr(x)
+subplot(3,2,4)
+stem(r)
+grid on
+xlabel('n')
+ylabel('r[n]')
+title('output seq for auto corr y[n] builtin fnc')
+ 
+%Cross corrr using for loop
+h3=fliplr(h1);
+xin=[x1 zeros(1,n-n1)]
+hin=[h3,zeros(1,n-n2)]
+ 
+for i=1:n
+    y1(i)=0;
+    for j=1:n
+        if(i-j+1)>=1
+           y1(i)=(xin(j).*hin(i-j+1))+y1(i);
+        end
+    end
+end
+ 
+subplot(3,2,5)
+stem(ny,y1)
+grid on
+xlabel('n')
+ylabel('y(n)')
+title('o/p seq cross corr obtained using for loop')
+ 
+%auto corrr using for loop
+x2=fliplr(x);
+x1=[x zeros(1,n-n1)]
+h11=[x2 zeros(1,n-n2)]
+for i=1:n
+ y2(i)=0;
+    for j=1:n
+        if(i-j+1)>=1
+           y2(i)=(x1(j).*h11(i-j+1))+y2(i);
+        end
+    end
+end 
+subplot(3,2,6)
+stem(ny,y2)
+grid on
+xlabel('n')
+ylabel('y(n)')
+title('o/p seq auto corr obtained using for loop')
+
+disp('OUTPUT')
+disp('Given input sequence x{n}')
+disp(nx1:nx2)
+disp(x) 
+disp('Given impulse sequence h{n}')
+disp(nh1:nh2)
+disp(h)
+disp('correlated output sequence using for loop')
+disp(ny)
+disp(y)
+disp('using cross corr inbuilt function')
+disp(y1)
+disp('using auto corr inbuilt function')
+disp(y2)
+
+
